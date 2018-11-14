@@ -1,0 +1,491 @@
+2.员工接口:/staff/
+	2.1 新增员工
+		请求：POST
+		server_url/staff/add
+		参数:{
+			staff=Staff(包含name，phone，position，level，gender，comment)
+		}
+		响应:{
+			"code":
+			"msg":""
+		}
+		0,16 = 成功 , 手机号码已存在
+	2.2 修改员工信息
+		请求：POST
+		server_url/staff/modify
+		参数:{
+			staff=Staff(包含name，phone，position，level，gender，comment,但Id信息不许更改)
+		}
+		响应:{
+			"code":
+			"msg":""
+		}
+		0 , 2 = 成功 , 员工不存在
+	2.3 删除员工
+		请求：POST
+		server_url/staff/delete
+		参数:{
+			staffId=int[] staffIds(可以批量删除,也可以逐条删除,但需要传递数组)
+		}
+		响应:{
+			"code":
+			"msg":""
+		}
+		0,15 = 成功, 不能删除自己
+	2.4 获取所有员工
+		请求：GET
+		server_url/staff/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{staff1,staff2..}
+			"size":共多少页记录
+			"realSize":共多少条记录
+		}
+		
+	2.5 查询员工
+		请求：GET
+		server_url/staff/query  可以复合查询
+		参数:{
+			String staffId= 
+			String staffName=
+			两参数都不传(或传递"-1","-2")则列出所有员工
+		}
+		响应:{
+			"code":
+			"msg":
+			"data":
+		}
+	2.6 员工服务详情
+		请求:GET
+		server_url/staff/detail
+		参数:{
+			int staffId
+		}
+		响应:{
+		   	"code":0
+		   	"msg":
+		   	"data"{ConsumOrder1,ConsumOrder2}
+		}
+
+4. 项目类别接口:/program/
+	4.1 新增项目类别:
+		请求:POST
+		server_url/program/add
+		参数:{
+			program=Pragram()
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	4.2 列举项目类别:
+		请求:GET
+		server_url/program/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{program1,program2}
+			"size":
+		}
+	4.3	删除项目:
+		请求:POST
+		server_url/program/delete
+		参数:{
+			Integer... programIds
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	
+	4.4 所有项目:
+		请求:GET
+		server_url/program/delete
+		参数:{
+		
+		}
+		响应:{
+			"code":0
+			"msg":
+			data:{string1,string2...}
+		}
+		
+	
+5. 项目服务接口:/project/
+	5.1 增加项目:
+		请求:POST
+		server_url/project/add
+		参数:{
+			project=Project()
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	
+	5.3 删除项目:
+		请求:POST
+		server_url/project/delete
+		参数:{
+			Integer... projectIds
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		
+	5.5 根据条件查找project:
+		请求:GET
+		server_url/project/query
+		参数:{
+			name=
+			programId=
+			page
+			number
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{project1, project2..}
+			realSize
+			
+		}
+		"code":0,2=成功,未找到
+
+6. 供应商接口:/provider/
+	6.1 新增供应商:
+		请求:POST
+		server_url/provider/add
+		参数:{
+			provider=Provider()
+		}
+		响应:{
+			"code":
+			"msg":
+			"realSize": 
+		}
+	6.2 删除供应商:
+		请求:POST
+		server_url/provider/delete
+		参数:{
+			Integer[] providerIds
+		}
+		响应:{
+			"code":
+			"msg":
+			"realSize"
+		}
+	6.3 列举供应商:
+		请求:GET
+		server_url/provider/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":
+			"msg":
+			"data":{Provider1, Provider2...}
+			"size":
+		}
+		
+	6.4 根据名字查找供应商:
+ 		请求:GET
+ 		server_url/provider/query
+ 		参数:{
+ 			name=
+ 			page
+ 			number=
+ 		}
+ 		响应:{
+ 			"code":
+ 			"msg":
+ 			"data":{Provider1,...}
+ 		}
+ 	6.5 返回所有供应商的名字
+ 		请求:GET
+ 		servel_url/provider/name
+ 		参数:{}
+ 		响应:{
+ 			code
+ 			msg
+ 			date:{string1,string2...}
+ 		}
+ 		
+ 		
+8. 会员卡种类相关接口:/service/
+	8.1 新增卡类:
+		请求:POST
+		server_url/service/add
+		参数:{
+			service=Service()
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	8.2 删除卡类:
+		请求:POST
+		server_url/service/delete
+		参数:{
+			serviceId=
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	8.3 修改卡类信息:
+		请求:POST
+		server_url/service/modify
+		参数:{
+			service=Service(包含已有Id)
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	8.4 列出所有卡类信息:
+		请求:GET
+		server_url/service/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{Service1, Service2...}
+			"size":
+		}
+	8.5 根据指定条件查找卡类
+		请求:GET
+		server_url/service/query
+		参数:{
+			name=
+			startTime=
+			endTime=
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{Service1, Service2...}
+			"size":
+		}
+12. 收支统计接口:/stat/
+	12.1.1 本日收入详情:
+		请求:GET
+		server_url/stat/today
+		参数:{
+			int income = 1, 
+			int expend = 0, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg":
+			"data":{IncomeOrder1, IncomeOrder2...}
+			IncomeStat: 收入总金额
+			realSize : 当日收入记录总数
+		}
+	12.1.2 本日支出详情:
+		请求:GET
+		server_url/stat/today
+		参数:{
+			int income = 0, 
+			int expend = 1, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg":
+			"data":{ExpendOrder1, ExpendOrder2...}
+			expendStat: 支出总金额
+			realSize : 当日支出记录总数
+		}
+	12.1.3 本日收支金额:
+		请求:GET
+		server_url/stat/today
+		参数:{
+			int income = 1, 
+			int expend = 1, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg":
+			expendStat: 支出总金额
+			incomeStat:	收入总金额
+		}
+	12.2.1 本月收入详情:
+		请求:GET
+		server_url/stat/thismonth
+		参数:{
+			int income = 1, 
+			int expend = 0, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg":
+			"data":{IncomeOrder1, IncomeOrder2...}
+			IncomeStat: 收入总金额
+			realSize : 当日收入记录总数
+		}
+	12.2.2 本月支出详情:
+		请求:GET
+		server_url/stat/thismonth
+		参数:{
+			int income = 0, 
+			int expend = 1, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg":
+			"data":{ExpendOrder1, ExpendOrder2...}
+			expendStat: 支出总金额
+			realSize : 当日支出记录总数
+		}
+	12.2.3 本月收支金额:
+		请求:GET
+		server_url/stat/thismonth
+		参数:{
+			int income = 1, 
+			int expend = 1, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg":
+			expendStat: 支出总金额
+			incomeStat:	收入总金额
+		}
+
+	12.3.1 日期区间收入详情
+		请求:GET
+		server_url/stat/query
+		参数:{
+			date startTime = , 
+			date endTime = 
+			int income = 1, 
+			int expend = 0, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg"
+			"data":{IncomeOrder1, IncomeOrder2...}
+			IncomeStat: 收入总金额
+			realSize : 区间收入记录总数
+		}
+	12.3.2 日期区间支出详情
+		请求:GET
+		server_url/stat/query
+		参数:{
+			date startTime = , 
+			date endTime = 
+			int income = 0, 
+			int expend = 1, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg"
+			"data":{ExpendOrder1, ExpendOrder2...}
+			expendStat: 支出总金额
+			realSize : 区间支出记录总数
+		}
+	12.3.3 日期区间收支金额
+		请求:GET
+		server_url/stat/query
+		参数:{
+			date startTime = , 
+			date endTime = 
+			int income = 1, 
+			int expend = 1, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg"
+			expendStat: 支出总金额
+			incomeStat:	收入总金额
+		}
+	
+	12.4.1 选择年份统计收支:
+		请求:GET
+		server_url/stat/monthlybyyear
+		参数:{
+			Date selectYear
+		}
+		响应:{
+			"code":
+			"msg"
+			jsonarray
+		}
+	
+	12.5.1 本周收入详情:
+		请求:GET
+		server_url/stat/thisweek
+		参数:{
+			int income = 1, 
+			int expend = 0, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg"
+			"data":{IncomeOrder1, IncomeOrder2...}
+			IncomeStat: 收入总金额
+			realSize : 区间收入记录总数
+		}
+	12.5.2 本周支出详情:
+		请求:GET
+		server_url/stat/thisweek
+		参数:{
+			int income = 0, 
+			int expend = 1, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg"
+			"data":{expendOrder1, expendOrder2...}
+			expendStat: 支出总金额
+			realSize : 区间支出记录总数
+		}
+	12.5.3 本周收支金额:
+		请求:GET
+		server_url/stat/thisweek
+		参数:{
+			int income = 1, 
+			int expend = 1, 
+			int page = 1, 
+			int number = 10
+		}
+		响应:{
+			"code":
+			"msg":
+			expendStat: 支出总金额
+			incomeStat:	收入总金额
+		}	

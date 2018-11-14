@@ -1,0 +1,182 @@
+接口定义
+1.储值卡接口:			
+	1.1 增加储值卡卡类		******************************调用原先/service/add接口
+		请求: POST
+		server_url/service/add
+		参数:{
+			String name;
+			int type = 2			*************************储值卡type = 2 
+			float price;			*************************售卡金额
+			int validTime;
+			String comment;
+			float actualPrice		************************actualPrice=卡面金额
+			int discount			************************discount=折扣,传%前数字		
+		}
+		响应:{
+			"code":0
+			"msg":""
+		}
+		code&msg = 0,成功 
+	
+	1.2 储值卡续卡			********************************在CardController下添加
+		请求:POST
+		server_url/card/renewal
+		参数:{
+			int cardId card的id
+			float payMoney 你实际给的钱
+			floatcardMoney 卡的价值
+			int payMethod 支付方式
+			int handlerId 办理人Id
+			
+		}
+		响应:{
+			"code":0
+			"msg":"  "
+		}
+		code&msg = 0,成功; 2,无该条记录
+
+2.项目管理				*************************************在ProjectController下添加
+	2.1 批量导入模版下载
+		请求:GET
+		server_url/project/download
+		参数:{
+			
+		}
+		响应:{
+		
+		}
+		获得项目管理批量导入模版
+
+	2.2 批量导入接口
+		请求:POST
+		servel_url/project/import
+		参数:{
+			MultipartFile file = 
+		}
+		响应:{
+			"code":0
+			"msg":"  "
+		}
+		code&msg = 0 成功; 18 批处理部分成功; 36 上传文档参数错误
+
+	2.3 项目查询
+		请求:GET
+		server_url/project/query				**************************按使用次数高-->低排列
+		参数:{
+			String name = ""
+			String programId = ""
+			int page = ""
+			int number = ""
+		}
+		响应:{
+			"code":0
+			"msg":"  "
+		}
+		code&msg = 0 成功; 18 批处理部分成功; 36 上传文档参数错误
+
+3.配件管理				*************************************在InventoryController下添加
+	3.1 批量导入配件种类模版下载
+		请求:GET
+		server_url/inventory/download
+		参数:{
+			
+		}
+		响应:{
+		
+		}
+		获得导入配件种类模版
+	3.2 批量导入接口
+		请求:POST
+		servel_url/inventory/import
+		参数:{
+			MultipartFile file = 
+		}
+		响应:{
+			"code":0
+			"msg":"  "
+		}
+		code&msg = 0 成功; 18 批处理部分成功; 36 上传文档参数错误
+	
+	3.3 单据清算
+		请求:POST
+		server_url/inventory/clearing
+		参数:{
+			float clearAmount = 
+		}
+		响应:{
+			"code":0
+			"msg":"  "
+		}
+		code&msg = 0 成功 
+
+4.单据管理:/order/
+	4.1 修改库存单据
+		请求:POST
+		server_url/order/modify		********************************只能在state = 0 , payState = 0时支持 
+		参数:{
+		 	String id;
+		 	Set<ProjectInfo> projects;
+		 	int programId;
+		 	String programName;
+		 	Set<ConsumExtraInventoriesInfo> inventoryInfos;
+		 	double totalPrice;//实际支付金额
+		 	double presentPrice;//展示原价
+	 	 	String faultDesc;
+	 	 	String repairAdvice;
+	 	 	Staff pickCarStaff;
+	 	 	float actualPrice;			// 订单实付金额	
+		}
+		响应:{
+			"code":0
+			"msg":"  "
+		}
+		code&msg = 0 成功; 
+	
+	4.2 挂单接口
+		请求:POST
+		server_url/order/save
+		参数:{
+			 String id;
+			 int carId;
+			 String licensePlate;
+			 String carType;
+			 String carBrand;
+			 int clientId;
+			 String clientName;
+			 String gender;
+			 String phone;
+			 Set<ProjectInfo> projects;
+			 int programId;
+			 int payMethod;   // 0,1,2,3,4  现金,刷卡,支付宝,微信,易付宝
+			 String programName;
+			 String parkingLocation;
+			 Set<ConsumExtraInventoriesInfo> inventoryInfos;
+			 int state;		//0,1,2=接,完,交
+			 double totalPrice;//实际支付金额
+			 double presentPrice;//展示原价
+			 int payState;	//0,1=未结算,已结算
+			 Date pickTime;
+			 Date finishTime;
+			 Date deliverTime;
+			 Date createDate;
+			 int lastMiles;
+			 int miles;
+			 Admin orderMaker;
+			 String comment;			//客户消费开单服务评价
+			 Date commentDate;
+			 int stars;			//客户消费开单评分
+			 String faultDesc;
+			 String repairAdvice;
+			 Staff pickCarStaff;
+			 Store store;			//门店Id
+			 String headimgurl;	    //头像地址
+			 float actualPrice;			// 订单实付金额
+		}
+		响应:{
+			“code”:0,
+			“msg”:””
+		}
+		Code&msg = 0,成功; 22所选会员卡对应项目剩余次数不足 ;23 库存不足
+
+
+

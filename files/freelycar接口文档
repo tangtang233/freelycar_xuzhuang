@@ -1,0 +1,1160 @@
+更新接口：
+
+1. 管理员接口:/admin/
+	1.1 管理员登陆：
+		请求: POST
+		server_url/admin/login
+		参数:{
+			account=""
+			password=""
+			rememberMe=
+		}
+		响应:{
+			"code":
+			"msg":
+		}
+		0,9,10,11,13=成功，账号不存在，密码错误，账号被锁定，已经登陆
+	1.2 管理员登出:
+		请求:GET
+		server_url/admin/logout
+		参数:{}
+		响应:{
+			"code":
+			"msg":
+		}
+	1.3 新增账户：
+		请求：POST
+		server_url/admin/add
+		参数:{
+			@RequestBody admin=Admin(包含account,password,name,Staff(id:),Role(id:),current,comment)
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,14=成功，账户已存在
+	1.4 修改账户信息:
+		请求：POST
+		server_url/admin/modify
+		参数:{
+			@RequestBody admin=Admin
+		}
+		响应:{
+			"code":0
+			"msg":""
+		}
+		0,2,14=成功，未找到，账号已存在
+	1.5 删除账户:
+		请求:POST
+		server_url/admin/delete
+		参数:{
+			accounts=String[]
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,15=成功，无法删除当前登陆账户
+	1.6 列举账户:
+		请求：GET
+		server_url/admin/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{admin1,admin2}
+			"size":页码数
+			"realSize":总条目数
+		}
+		0,2=，
+	1.7 指定条件查询账户:
+		请求：GET
+		server_url/admin/query
+		参数:{
+			account=
+			name=
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{admin1,admin2}
+			"size":页码数
+			"realSize":总条目数
+		}
+
+	1.8 更改用户状态(启用与禁用账户):
+		请求:POST
+		server_url/admin/changestate
+		参数:{
+			account=
+			type=(0,1=禁用,启用)
+		}
+		响应:{
+			code:
+			msg:
+		}
+		0,2,24,26
+	1.9 根据account获取admin
+		请求:GET
+		server_url/admin/
+		
+		参数:{
+			account=
+		}
+		响应:{
+			code:
+			msg:
+			data:
+		}
+
+2. 员工接口:/staff/
+	2.1 新增员工
+		请求：POST
+		server_url/staff/add
+		参数:{
+			staff=Staff(包含name，phone，position，level，gender，comment)
+		}
+		响应:{
+			"code":0
+			"msg":""
+		}
+	2.2 修改员工信息
+		请求：POST
+		server_url/staff/modify
+		参数:{
+			staff=Staff(包含Id信息)
+		}
+		响应:{
+			"code":0
+			"msg":""
+		}
+	2.3 删除员工
+		请求：POST
+		server_url/staff/delete
+		参数:{
+			staffId=
+		}
+		响应:{
+			"code":0
+			"msg":""
+		}
+	2.4 获取所有员工
+		请求：GET
+		server_url/staff/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{staff1,staff2..}
+			"size":
+		}
+	2.5 查询员工
+		请求：GET
+		server_url/staff/query
+		参数:{
+			staffId=
+			staffName=
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{staff}
+		}
+
+3. 会员接口:/client/
+	3.1 查询所有客户
+		请求:GET
+		server_url/client/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{client1,client2..}
+			"size":
+			"realSize":
+		}
+		0,2
+	3.2 新增客户
+		请求:POST
+		server_url/client/add
+		参数:{
+			@RequestBody client=Client(name:,age:,idNumber:,gender:,phone:,birthday:,driverLicense:,recommendName:,cars:{})
+		}
+		响应:{
+			"code":0
+			"msg"
+		}
+	3.3 修改客户信息
+		请求:POST
+		server_url/client/modify
+		参数:{
+			@RequestBody client=Client(包含Id信息)
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,2
+	3.4 删除客户:
+		请求:POST
+		server_url/client/delete
+		参数:{
+			clientIds=Integer[]
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,18
+	3.5 关键字查询客户:
+		请求:GET
+		server_url/client/query
+		参数:{
+			name=
+			phone=
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{client1,client2..}
+			"size":
+			"realSize":
+		}
+		code:0,2=成功,未找到
+	3.6 客户详细信息:
+		请求:GET
+		server_url/client/detail
+		参数:{
+			clientId=clientId
+		}
+		响应:{
+			"code":0
+			"msg":
+			"client":Client，客户基本信息
+			"data":{IncomeOrder}，消费记录
+		}
+	3.7 客户新增车辆:
+		请求:POST
+		server_url/client/addcar
+		参数:{
+			@RequestBody Car car=Car(Clinent(id:),)
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,2,17
+	3.8 客户删除车辆:
+		请求:POST
+		server_url/client/delcar
+		参数:{
+			clientId=clientId
+			carId=carId
+		}
+		0
+	3.9 获取客户姓名:
+		请求:GET
+		server_url/client/querynames
+		参数:{
+			name=
+		}
+		响应:{
+			code:
+			msg:
+			data:[name1, name2]
+		}
+	3.10 获取用户数量统计:
+		请求:GET
+		server_url/client/stat
+		参数:{
+
+		}
+		响应:{
+			code:
+			msg:
+			realSize:
+			thisMonth:
+			today
+		}
+	3.11 客户消费历史:
+		请求:GET
+		server_url/client/consumhist
+		参数:{
+			clientId=
+			startTime=
+			endTime=
+			page=1
+			number=10
+		}
+		响应:{
+			code:
+			msg:
+			data:
+			realSize:
+			size:
+			amount:
+		}
+
+4. 项目类别接口:/program/
+	4.1 新增项目类别:
+		请求:POST
+		server_url/program/add
+		参数:{
+			program=Pragram()
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	4.2 列举项目类别:
+		请求:GET
+		server_url/program/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{program1,program2}
+			"size":
+		}
+	4.3	删除项目:
+		请求:POST
+		server_url/program/delete
+		参数:{
+			programId=programId
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+
+5. 项目服务接口:/project/
+	5.1 增加项目:
+		请求:POST
+		server_url/project/add
+		参数:{
+			programId=
+			project=Project()
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		
+	//5.2 修改项目:
+	//	请求:POST
+	//	server_url/project/modify
+	//	参数:{
+	//		project=Project(包含存在的Id)
+	//	}
+	//	响应:{
+	//		"code":0
+	//		"msg":
+	//	}
+	
+	5.3 删除项目:
+		请求:POST
+		server_url/project/delete
+		参数:{
+			projectId=
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	5.4 列举所有项目:
+		请求:GET
+		server_url/project/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{project1, project2}
+			"size":
+		}
+	5.5 根据条件查找project:
+		请求:GET
+		server_url/project/query
+		参数:{
+			name=
+			programId=
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{project1, project2..}
+		}
+		"code":0,2=成功,未找到
+
+6. 供应商接口:/provider/
+	6.1 新增供应商:
+		请求:POST
+		server_url/provider/add
+		参数:{
+			provider=Provider()
+		}
+		响应:{
+			"code":
+			"msg":
+		}
+	6.2 删除供应商:
+		请求:POST
+		server_url/provider/delete
+		参数:{
+			providerId=
+		}
+		响应:{
+			"code":
+			"msg":
+		}
+	6.3 列举供应商:
+		请求:GET
+		server_url/provider/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":
+			"msg":
+			"data":{Provider1, Provider2...}
+			"size":
+		}
+		
+	6.4 根据名字查找供应商:
+ 		请求:GET
+ 		server_url/provider/query
+ 		参数:{
+ 			name=
+ 		}
+ 		响应:{
+ 			"code":
+ 			"msg":
+ 			"data":{Provider1,...}
+ 		}
+
+7. 库存相关接口:/inventory/
+	7.1 库存类别相关：
+		7.1.1 新增库存类别:
+			请求:POST
+			server_url/inventory/addtype
+			参数:{
+				@RequestBody inventoryType={typeName:, comment:}
+			}
+			响应:{
+				"code":0
+				"msg":
+			}
+		7.1.2 删除库存类类别:
+			请求:POST
+			server_url/inventory/deltype
+			参数:{
+				inventoryTypeIds=Integer[]
+			}
+			响应:{
+				"code":0
+				"msg":
+			}
+			0,6,18
+		7.1.3 列举所有类别:
+			请求:GET
+			server_url/inventory/listtype
+			参数:{
+				page=1
+				number=10
+			}
+			响应:{
+				"code":0
+				"msg":
+				"data":{inventoryType1, ...}
+				"size":
+				"realSize":
+			}
+			0
+		7.1.4 查找指定库存类别:
+			请求:GET
+			server_url/inventory/querytype
+			参数:{
+				name=
+				startTime=
+				endTime=
+				page=1
+				number=10
+			}
+			响应:{
+				"code":0
+				"msg":
+				"data":{inventoryType1, ...}
+				"size":
+				"realSize":
+			}
+			0
+	7.2 库存品牌相关:
+		7.2.1 新增库存品牌:
+			请求:POST
+			server_url/inventory/addbrand
+			参数:{
+				@RequestBody inventoryBrand={name:, comment:}
+			}
+			响应:{
+				"code":0
+				"msg":
+			}
+			0
+		7.2.2 删除库存品牌:
+			请求:POST
+			server_url/inventory/delbrand
+			参数:{
+				inventoryBrandIds=Integer[]
+			}
+			响应:{
+				"code":0
+				"msg":
+			}
+			0,6,18
+		7.2.3 查看所有品牌:
+			请求:GET
+			server_url/inventory/listbrand
+			参数:{
+				page=1
+				number=10
+			}
+			响应:{
+				"code":0
+				"msg":
+				"data":{inventoryBrand1, ...}
+				"size":
+				"realSize":
+			}
+		7.2.4 查找库存品牌:
+			请求:GET
+			server_url/inventory/querybrand
+			参数:{
+				name=
+			}
+			响应:{
+				"code":0
+				"msg":
+				"data":{inventoryType1, ...}
+				"size":
+			}
+			code:0,2=成功,未找到
+	7.3 库存本身相关:
+		7.3.1 增加库存:
+			请求:POST
+			server_url/inventory/add
+			参数:{
+				@RequestBody inventory={name:,type:{id:},brand:{id:},standard:,property:,price:,comment:,providers:[{Provider}]}
+			}
+			响应:{
+				"code":0
+				"msg":
+			}
+			0
+		7.3.2 删除库存:
+			请求:POST
+			server_url/inventory/delete
+			参数:{
+				inventoryIds=Integer[]
+			}
+			响应:{
+				"code":0
+				"msg":
+			}
+		
+		7.3.3 库存修改:
+			请求:POST
+			server_url/inventory/modify
+			参数:{
+				@RequestBody inventory={id:,}
+			}
+			0,2
+	7.4 入库:
+		请求:POST
+		server_url/inventory/instock
+		参数:{
+			@RequestBody inventoryOrder={type:,inventoryInfos:[{}],orderMaker:{id:}}
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,18
+	7.5 出库:
+		请求:POST
+		server_url/inventory/outstock
+		参数:{
+			@RequestBody inventoryOrder={type:,inventoryInfos:[{}],orderMaker:{id:}}
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,18
+	7.6 库存查询:
+		请求:GET
+		server_url/inventory/list
+		参数:{
+			name=
+			typeId=
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{Inventory1, Inventory2...}
+			"size":
+			"realSize":
+		}
+	7.7 单项库存库存查询:
+		请求:GET
+		server_url/inventory/remain
+		参数:{
+			inventoryId=
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":Inventory
+		}
+	7.8 库存单据获取
+		请求:GET
+		server_url/inventory/listorder
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{InventoryOrder1, InventoryOrder2...}
+			"size":
+			"realSize":
+		}
+	7.9 查找库存单据
+		请求:GET
+		server_url/inventory/query
+		参数:{
+			inventoryOriderId=
+			adminId=
+			type=
+			page=1
+			number=10
+
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{InventoryOrder1, InventoryOrder2...}
+			"size":
+			"realSize":
+		}
+	7.10 查看库存单据明细
+		请求:GET
+		server_url/inventory/orderdetail
+		参数:{
+			inventoryOrderId=
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":InventoryOrder
+		}
+		
+	7.11　库存单据的修改:
+		请求:POST
+		server_url/inventory/modifyorder
+		参数:{
+			@RequestBody InventoryOrder=
+		}
+		响应:{
+			code:
+			msg:
+			data:当单据更新失败的时候有			
+		}
+		0,18
+
+	7.12  库存单据的删除:
+		请求:POST
+		server_url/inventory/modifyorder
+		参数:{
+			orderId=
+		}
+		响应:{
+			code:
+			msg:
+		}
+		0
+
+8. 会员卡种类相关接口:/service/
+	8.1 新增卡类:
+		请求:POST
+		server_url/service/add
+		参数:{
+			service=Service()
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	8.2 删除卡类:
+		请求:POST
+		server_url/service/delete
+		参数:{
+			serviceId=
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	8.3 修改卡类信息:
+		请求:POST
+		server_url/service/modify
+		参数:{
+			service=Service(包含已有Id)
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	8.4 列出所有卡类信息:
+		请求:GET
+		server_url/service/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{Service1, Service2...}
+			"size":
+		}
+	8.5 根据指定条件查找卡类
+		请求:GET
+		server_url/service/query
+		参数:{
+			name=
+			startTime=
+			endTime=
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{Service1, Service2...}
+			"size":
+		}
+
+9. 消费开单相关接口:/order/
+	9.1 消费下单:
+		请求:POST
+		server_url/order/book
+		参数:{
+			@RequestBody consumOrder=()
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,23
+	9.2 消费单据列表:
+		请求:GET
+		server_url/order/list
+		参数:{
+			page=1
+			number=10
+		}
+		响应:{
+			"code":0
+			"msg":
+			"data":{ConsumOrders1, ConsumOrders2...}
+			"size":
+			"realSize":
+		}
+		
+	9.3 消费单据修改:
+		请求:POST
+		server_url/order/modify
+		参数:{
+			@RequestBody consumOrder=
+		}
+		响应:{
+			"code":
+			"msg":
+		}
+	9.4 完工:
+		请求:POST
+		server_url/order/finish
+		参数:{
+			consumOrderId=
+			date=
+			comment=
+		}
+		响应:{
+			"code":
+			"msg":
+		}
+		0,2
+	9.5 交车:
+		请求:POST
+		server_url/order/deliver
+		参数:{
+			consumOrderId=
+			date=
+			comment=
+		}
+		响应:{
+			"code":
+			"msg":
+		}
+		0,2,20
+	9.6 根据条件查询:
+		请求:POST
+		server_url/order/query
+		参数:{
+			@RequestBody condition={ConsumOrder:{id:,licensePlate:,programId,payState:,clientId:}, startDate:, endDate:, dateType:0,1,2,3=单据,交车,接车,完工,page:1,number:10}
+		}
+		响应:{
+			"code":
+			"msg":
+			"data":
+			"size":
+			"realSize":
+		}
+	9.7 根据id查询特定消费订单:
+		请求:GET
+		server_url/order/queryId
+		参数:{
+			consumOrderId=
+		}
+		响应:{
+			code:
+			msg:
+			data:
+		}
+
+
+10. 结算接口:/pay/
+	10.1 购买会员卡:
+		请求:POST
+		server_url/pay/buycard
+		参数:{
+			@RequestBody wrapper={card:{service:{},orderMaker:},clientId:}
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+	10.2 消费单据结算:
+		请求:POST
+		server_url/pay/consumpay
+		参数:{
+			consumOrdersId=
+			payMethod=
+		}
+		响应:{
+			"code":0
+			"msg":
+		}
+		0,2,21,22
+
+11. 支出接口:/charge/
+	11.1 其他支出类别相关:
+		11.1.1 增加其他支出类别
+			请求:POST
+			server_url/charge/addtype
+			参数:{
+				@RequestBody otherExpenType=(name:)
+			}
+			响应:{
+				"code":
+				"msg":
+			}
+			0
+		11.1.2 删除其他支出类别:
+			请求:POST
+			server_url/charge/deltype
+			参数:{
+				otherExpandTypeId=
+			}
+			响应:{
+				"code":
+				"msg":
+			}
+			0,2
+		11.1.3 获取其他支出类别:
+			请求:GET
+			server_url/charge/listtype
+			参数:{
+
+			}
+			响应:{
+				"code":
+				"msg":
+				"data":{OtherExpendType1, OtherExpendType2...}
+			}
+	11.2 其他支出记录
+		11.2.1 增加其他支出记录:
+			请求:POST
+			server_url/charge/add
+			参数:{
+				@RequestBody OtherExpendOrder=OtherExpendOrder(type(id:),amount:,expendDate:,comment:)
+			}
+			响应:{
+				"code":
+				"msg":
+			}
+			0
+		11.2.2 删除其他支出记录:
+			请求:POST
+			server_url/charge/delete
+			参数:{
+				ids=String[]
+			}
+			响应:{
+				"code":
+				"msg":
+			}
+			0,18
+		11.2.3 列出所有支出记录:
+			请求:GET
+			server_url/charge/list
+			参数:{
+				page=1
+				number=10
+			}
+			响应:{
+				"code":
+				"msg":
+				"data":{OtherExpendOrder1, OtherExpendOrder2...}
+				"size":
+				"realSize":
+			}
+			0,2
+		11.2.4 根据条件查询:
+			请求:GET
+			server_url/charge/query
+			参数:{
+				otherExpendTypeId=
+				startTime=
+				endTime=
+				page=1
+				number=10
+			}
+			响应:{
+				"code":
+				"msg":
+				"data":{OtherExpendOrder1, OtherExpendOrder2...}
+				"size":
+				"realSize":
+			}
+
+12. 统计数据:/stat/
+	12.1 收支统计
+		12.1.1 本日收支查询:
+			请求:GET
+			server_url/stat/today
+			参数:{
+
+			}
+			响应:{
+				"code":
+				"msg":
+				"income":IncomeStat
+				"expend":ExpendStat
+			}
+		12.1.2 本月收支查询:
+			请求:GET
+			server_url/stat/thismonth
+			参数:{
+
+			}
+			响应:{
+				"code":
+				"msg":
+				"income":IncomeStat
+				"expend":ExpendStat
+			}
+		12.1.3 指定日期期间查询:
+			请求:GET
+			server_url/stat/query
+			参数:{
+				startDate=
+				endDate=
+			}
+			响应:{
+				"code":
+				"msg":
+				"income":{IncomeStat1, IncomeStat2...}
+				"expend":{ExpendStat1, ExpendStat2...}
+			}
+		12.1.4 给定某年按月份查询:
+			server_url/stat/monthlybyyear
+			请求:GET
+			参数:{
+				date=
+			}
+			响应:{
+				"code":
+				"msg":
+				"income":{IncomeStat1, IncomeStat2...}
+				"expend":{ExpendStat1, ExpendStat2...}
+			}
+	12.2 收支详细信息:
+		12.2.1 本日收入详情:
+			请求:GET
+			server_url/stat/today/detail
+			参数:{
+				income=1
+				expend=0
+			}
+			响应:{
+				"code":
+				"msg":
+				"data":{IncomeOrder1, IncomeOrder2...}
+			}
+		12.2.2 本日支出详情:
+			请求:GET
+			server_url/stat/today/detail
+			参数:{
+				income=0
+				expend=1
+			}
+			响应:{
+				"code":
+				"msg":
+				"data":{ExpendOrder1, ExpendOrder2...}
+			}
+		12.2.3 本月收入详情:
+			请求:GET
+			server_url/stat/thismonth/detail
+			参数:{
+				income=1
+				expend=0
+			}
+			响应:{
+				"code":
+				"msg":
+				"data":{IncomeOrder1, IncomeOrder2...}
+			}
+		12.2.4 本月支出详情:
+			参数:{
+				income=0
+				expend=1
+			}
+			响应:{
+				"code":
+				"msg":
+				"data":{ExpendOrder1, ExpendOrder2...}
+
+/*
+13. 单据Id生成接口:/idgen
+	13.1 生成id:
+		请求:GET
+		server_url/idgen/generate
+		参数:{
+			type=(0,1,2,3,4,5 = 开卡，美容，维修，出库，入库，库存编号)
+		}
+		响应:{
+			"id":id
+		}
+*/
+
+14. 车辆相关接口:/car
+	14.1 车牌号查询:
+		请求:GET
+		server_url/car/query
+		参数:{
+			queryText=
+		}
+		响应:{
+			code:
+			msg:
+			data:{车牌号列表}
+		}
+		0,2
+	14.2 根据车牌号查客户:
+		请求:GET
+		server_url/car/detail
+		参数:{
+			licensePlate=
+		}
+		响应:{
+			code:
+			msg:
+			data:Client{}
+		}
+		0,2
+
+	14.3 获取车辆品牌:
+		请求:GET
+		server_url/car/listbrand
+		参数:{
+
+		}
+		响应:{
+			code:
+			msg:
+			data:{CarBrand1, CarBrand2...}
+		}
+	14.4 获取车牌号:
+		server_url/car/license
+		参数:{
+			licensePlate=模糊(必须提供部分)
+		}
+		响应:{
+			code:
+			msg:
+			data:[]
+		}
+	14.5 根据车牌号获取客户:
+		server_url/car/getcar
+		参数:{
+			licensePlate=精确
+		}
+		响应:{
+			code:
+			msg:
+			data:Client
+		}
+
+15. 会员卡相关：/card
+	15.1 获取有效会员卡:
+		请求:GET
+		参数:{
+			clientId=
+			projectId=
+		}
+		响应:{
+			code:
+			msg:
+			data:{Card1, Card2...}
+		}
+		0,2
+
+16.Excel导出:/report/statMonth
+    16.1营业汇总（金奥店）
+    请求 ：GET
+    参数：{
+        month=
+    }
+    响应:*.xls
