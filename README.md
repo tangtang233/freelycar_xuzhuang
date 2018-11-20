@@ -1,3 +1,11 @@
-# freelycar
-> 2018/1/17 增加service的上架及下架功能,能及时在微信端显示;
-> 2018/5/31 从branch：jinao新建了分支——smart_ark，用于智能柜模块的功能开发。在上线推广稳定后考虑并入jinao分支中。
+# 小易爱车后台管理系统-后端业务代码
+
+> 徐庄店在用：真实运行网址（[点击跳转](http://www.freelycar.com/management.html#/login "徐庄店")）
+
+> 全民店在用：真实运行网址（[点击跳转](https://www.freelycar.com/quanmin/management.html#/login "徐庄店")）
+
+本repo用于后期维护，上述门店的项目代码以此为基准进行版本迭代。
+
+如有疑问，请联系我。
+
+E-mail:tangwei@freelycar.com
