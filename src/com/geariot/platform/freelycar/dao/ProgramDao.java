@@ -11,7 +11,9 @@ public interface ProgramDao {
 	Program findProgramByName(String name);
 	
 	void save(Program program);
-	
+
+	void update(Program program);
+
 	void delete(Program program);
 	
 	void delete(int programId);

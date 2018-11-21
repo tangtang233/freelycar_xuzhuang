@@ -28,6 +28,11 @@ public class ProgramDaoImpl implements ProgramDao {
 	}
 
 	@Override
+	public void update(Program program) {
+		this.getSession().update(program);
+	}
+
+	@Override
 	public void delete(Program program) {
 		this.getSession().delete(program);
 	}

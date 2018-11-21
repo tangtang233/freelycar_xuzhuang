@@ -1,6 +1,7 @@
 package com.geariot.platform.freelycar.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +22,13 @@ public class ProgramController {
 	public String addProgram(Program program){
 		return programService.addProgram(program);
 	}
-	
+
+	@RequestMapping(value = "/modify" , method = RequestMethod.POST)
+	@PermissionRequire("program:modify")
+	public String modifyProgram(Program program){
+		return programService.modifyProgram(program);
+	}
+
 	@RequestMapping(value = "/list" , method = RequestMethod.GET)
 	@PermissionRequire("program:query")
 	public String getProgramList(int page , int number){
