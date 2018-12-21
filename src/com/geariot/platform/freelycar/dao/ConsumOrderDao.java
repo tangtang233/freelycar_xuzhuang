@@ -1,11 +1,12 @@
 package com.geariot.platform.freelycar.dao;
 
-import java.util.Date;
-import java.util.List;
-
 import com.geariot.platform.freelycar.entities.ConsumOrder;
+import com.geariot.platform.freelycar.model.OrderSummary;
 import com.geariot.platform.freelycar.utils.query.ConsumOrderQueryCondition;
 import com.geariot.platform.freelycar.utils.query.ProgramPayStat;
+
+import java.util.Date;
+import java.util.List;
 
 public interface ConsumOrderDao {
 	
@@ -68,4 +69,8 @@ public interface ConsumOrderDao {
 	List<ConsumOrder> bigScreenOrder();
 	
 	long getBigScreenOrderCount();
+
+	List<OrderSummary> listAllPaidOrders(String startTime, String endTime, int from, int pageSize);
+
+	long getAllPaidOrdersCount(String startTime, String endTime);
 }
