@@ -73,4 +73,6 @@ public interface ConsumOrderDao {
 	List<OrderSummary> listAllPaidOrders(String startTime, String endTime, int from, int pageSize);
 
 	long getAllPaidOrdersCount(String startTime, String endTime);
+
+	List<OrderSummary> listAllPaidOrders(String startTime, String endTime);
 }

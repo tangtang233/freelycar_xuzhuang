@@ -33,4 +33,8 @@ public class OrderSummaryService {
         int size = (int) Math.ceil(count / (double) number);
         return RESCODE.SUCCESS.getJSONRES(list, size, count);
     }
+
+    public List<OrderSummary> listAllPaidOrders(String startTime, String endTime) {
+        return consumOrderDao.listAllPaidOrders(startTime, endTime);
+    }
 }

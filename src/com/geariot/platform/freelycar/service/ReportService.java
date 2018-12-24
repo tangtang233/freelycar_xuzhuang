@@ -7,6 +7,7 @@ import com.geariot.platform.freelycar.dao.*;
 import com.geariot.platform.freelycar.entities.*;
 import com.geariot.platform.freelycar.exception.ExcelAnalyzeException;
 import com.geariot.platform.freelycar.model.InsuranceExcelData;
+import com.geariot.platform.freelycar.model.OrderSummary;
 import com.geariot.platform.freelycar.model.RESCODE;
 import com.geariot.platform.freelycar.utils.*;
 import com.geariot.platform.freelycar.utils.CommonUtils.FileSuffix;
@@ -64,6 +65,9 @@ public class ReportService {
 
     @Autowired
     private ChargeDao chargeDao;
+
+    @Autowired
+    private ConsumOrderDao consumOrderDao;
 
     public boolean exportInsuranceExcel(HttpServletResponse response) {
         try {
@@ -369,6 +373,34 @@ public class ReportService {
             HSSFWorkbook wb = export.generateExcel();
             wb = export.generateBusinessSummarySheet(wb, month + "月份店面盈亏平衡", earningsTitle, otherExpendTypeNames, otherExpendTypeIds, exportData);
             export.downLoadExcel(month + "月份店面盈亏平衡.xls", wb, response, request);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 导出流水明细列表
+     *
+     * @param startTime
+     * @param endTime
+     * @param response
+     * @param request
+     * @return
+     */
+    public boolean exportOrderSummaryExcelWithDate(String startTime, String endTime, HttpServletResponse response, HttpServletRequest request) {
+        try {
+            //获取流水明细
+            List<OrderSummary> orderSummaryList = consumOrderDao.listAllPaidOrders(startTime, endTime);
+
+            String[] fields = new String[]{"序号", "车型", "车牌号码", "车主姓名", "联系方式", "消费项目", "金额", "时间", "是否会员"};
+
+
+            ClientExcelExport export = new ClientExcelExport();
+            HSSFWorkbook wb = export.generateExcel();
+            wb = export.generateOrderSummarySheet(wb, "流水明细", fields, orderSummaryList);
+            export.downLoadExcel("流水明细.xls", wb, response, request);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

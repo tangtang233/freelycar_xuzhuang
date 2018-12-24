@@ -2,6 +2,7 @@ package com.geariot.platform.freelycar.utils;
 
 import com.geariot.platform.freelycar.entities.Car;
 import com.geariot.platform.freelycar.entities.Client;
+import com.geariot.platform.freelycar.model.OrderSummary;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
@@ -18,81 +19,80 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
 public class ClientExcelExport {
 
-	static Logger log = Logger.getLogger(ClientExcelExport.class);
+    static Logger log = Logger.getLogger(ClientExcelExport.class);
 
-	// 第一步，创建一个webbook，对应一个Excel文件
-	public HSSFWorkbook generateExcel() {
-		return new HSSFWorkbook();
-	}
+    // 第一步，创建一个webbook，对应一个Excel文件
+    public HSSFWorkbook generateExcel() {
+        return new HSSFWorkbook();
+    }
 
-	public HSSFWorkbook generateSheet(HSSFWorkbook wb, String sheetName, String[] fields, List<Client> list) {
+    public HSSFWorkbook generateSheet(HSSFWorkbook wb, String sheetName, String[] fields, List<Client> list) {
 
-		// 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
-		HSSFSheet sheet = wb.createSheet(sheetName);
-		// 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
-		HSSFRow row = sheet.createRow(0);
-		// 第四步，创建单元格，并设置值表头 设置表头居中
-		HSSFCellStyle style = wb.createCellStyle();
-		style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+        HSSFSheet sheet = wb.createSheet(sheetName);
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+        HSSFRow row = sheet.createRow(0);
+        // 第四步，创建单元格，并设置值表头 设置表头居中
+        HSSFCellStyle style = wb.createCellStyle();
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		// 设置表头字段名
-		HSSFCell cell;
-		int m = 0;
-		for (String fieldName : fields) {
-			sheet.setDefaultColumnStyle(m, style);
-			cell = row.createCell(m);
-			cell.setCellValue(fieldName);
-			m++;
-		}
+        // 设置表头字段名
+        HSSFCell cell;
+        int m = 0;
+        for (String fieldName : fields) {
+            sheet.setDefaultColumnStyle(m, style);
+            cell = row.createCell(m);
+            cell.setCellValue(fieldName);
+            m++;
+        }
 
-		for (int i = 0; i < list.size(); i++) {
-			row = sheet.createRow(i + 1);
-			Client data = list.get(i);
-			// 第五步，创建单元格，并设置值
-			
-			//设置序号
-			row.createCell(0).setCellValue(i + 1);
-			//设置客户姓名
-			row.createCell(1).setCellValue(data.getName());
-			//设置手机号
-			row.createCell(2).setCellValue(data.getPhone());
-			//设置是否会员
-			if(data.getIsMember() == null){
-				row.createCell(4).setCellValue("否");
-			}else{
-				if(data.getIsMember()){
-					row.createCell(4).setCellValue("是");
-				}
-				else{
-					row.createCell(4).setCellValue("否");
-				}
-			}
-			String licensePlate = "";
-			String licenseDate = "";
-			Set<Car> cars = data.getCars();
-			if(cars == null || cars.isEmpty()){
-				row.createCell(3).setCellValue("空");
-				row.createCell(5).setCellValue("空");
-			}
-			else{
-				for(Car car : cars){
-					licensePlate = licensePlate + (car.getLicensePlate()==null?"空":car.getLicensePlate())+",";
-					licenseDate = licenseDate + (car.getInsuranceEndtime() == null?"空":sdf.format(car.getInsuranceEndtime()))+",";
-				}
-				int plateLength = licensePlate.length();
-				int dateLength = licenseDate.length();
-				licenseDate = licenseDate.substring(0, dateLength-1);
-				licensePlate = licensePlate.substring(0, plateLength-1);
-				row.createCell(3).setCellValue(licensePlate);
-				row.createCell(5).setCellValue(licenseDate);
-			}
-		}
-		return wb;
-	}
+        for (int i = 0; i < list.size(); i++) {
+            row = sheet.createRow(i + 1);
+            Client data = list.get(i);
+            // 第五步，创建单元格，并设置值
+
+            //设置序号
+            row.createCell(0).setCellValue(i + 1);
+            //设置客户姓名
+            row.createCell(1).setCellValue(data.getName());
+            //设置手机号
+            row.createCell(2).setCellValue(data.getPhone());
+            //设置是否会员
+            if (data.getIsMember() == null) {
+                row.createCell(4).setCellValue("否");
+            } else {
+                if (data.getIsMember()) {
+                    row.createCell(4).setCellValue("是");
+                } else {
+                    row.createCell(4).setCellValue("否");
+                }
+            }
+            String licensePlate = "";
+            String licenseDate = "";
+            Set<Car> cars = data.getCars();
+            if (cars == null || cars.isEmpty()) {
+                row.createCell(3).setCellValue("空");
+                row.createCell(5).setCellValue("空");
+            } else {
+                for (Car car : cars) {
+                    licensePlate = licensePlate + (car.getLicensePlate() == null ? "空" : car.getLicensePlate()) + ",";
+                    licenseDate = licenseDate + (car.getInsuranceEndtime() == null ? "空" : sdf.format(car.getInsuranceEndtime())) + ",";
+                }
+                int plateLength = licensePlate.length();
+                int dateLength = licenseDate.length();
+                licenseDate = licenseDate.substring(0, dateLength - 1);
+                licensePlate = licensePlate.substring(0, plateLength - 1);
+                row.createCell(3).setCellValue(licensePlate);
+                row.createCell(5).setCellValue(licenseDate);
+            }
+        }
+        return wb;
+    }
 
     public void export(HSSFWorkbook wb, HttpServletResponse response) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -213,12 +213,12 @@ public class ClientExcelExport {
         return wb;
     }
 
-    public void downLoadExcel(String fileName, HSSFWorkbook workbook, HttpServletResponse response,HttpServletRequest request) {
+    public void downLoadExcel(String fileName, HSSFWorkbook workbook, HttpServletResponse response, HttpServletRequest request) {
         OutputStream out = null;
         try {
             out = response.getOutputStream();
             response.setContentType("application/x-msdownload");
-            this.setHeader(response,request,fileName);
+            this.setHeader(response, request, fileName);
             workbook.write(out);
         } catch (Exception e) {
             e.printStackTrace();
@@ -263,4 +263,55 @@ public class ClientExcelExport {
         }
         return null;
     }
+
+
+    public HSSFWorkbook generateOrderSummarySheet(HSSFWorkbook wb, String sheetName, String[] fields, List<OrderSummary> orderSummaryList) {
+
+        // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
+        HSSFSheet sheet = wb.createSheet(sheetName);
+        // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
+        HSSFRow row = sheet.createRow(0);
+        // 第四步，创建单元格，并设置值表头 设置表头居中
+        HSSFCellStyle style = wb.createCellStyle();
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        // 设置表头字段名
+        HSSFCell cell;
+        int m = 0;
+        for (String fieldName : fields) {
+            sheet.setDefaultColumnStyle(m, style);
+            cell = row.createCell(m);
+            cell.setCellValue(fieldName);
+            m++;
+        }
+
+        for (int i = 0; i < orderSummaryList.size(); i++) {
+            row = sheet.createRow(i + 1);
+            OrderSummary data = orderSummaryList.get(i);
+            // 第五步，创建单元格，并设置值
+
+            //设置序号
+            row.createCell(0).setCellValue(i + 1);
+            //设置车型
+            row.createCell(1).setCellValue(data.getCarBrand());
+            //设置车牌号码
+            row.createCell(2).setCellValue(data.getLicensePlate());
+            //设置车主姓名
+            row.createCell(3).setCellValue(data.getName());
+            //设置联系方式
+            row.createCell(4).setCellValue(data.getPhone());
+            //设置消费项目
+            row.createCell(5).setCellValue(data.getProjectName());
+            //设置金额
+            row.createCell(6).setCellValue(data.getTotalActualPrice());
+            //设置时间
+            row.createCell(7).setCellValue((new Date(data.getCreateDate())));
+            //设置车牌号码
+            row.createCell(8).setCellValue("1".equals(data.getIsMember()) ? "是" : "否");
+        }
+        return wb;
+    }
+
 }

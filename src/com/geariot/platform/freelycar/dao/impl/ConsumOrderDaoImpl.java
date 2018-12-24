@@ -14,6 +14,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -332,10 +333,12 @@ public class ConsumOrderDaoImpl implements ConsumOrderDao {
 
 
     /**
-     * 根据时间查询列表（已结算订单）
+     * 根据时间查询列表（已结算订单）的分页方法
      *
      * @param startTime
      * @param endTime
+     * @param from
+     * @param pageSize
      * @return
      */
     @Override
@@ -346,6 +349,13 @@ public class ConsumOrderDaoImpl implements ConsumOrderDao {
         return query.list();
     }
 
+    /**
+     * 根据时间查询列表（已结算订单）的总数
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
     @Override
     public long getAllPaidOrdersCount(String startTime, String endTime) {
         String sql = "select count(1) as num from (SELECT co.id, co.clientId, co.carBrand, co.licensePlate, c.`name`, c.phone, co.actualPrice + co.actualPrice1 AS totalActualPrice, co.totalPrice, pn.projectName, co.createDate, c.isMember FROM consumorder co LEFT JOIN client c ON c.id = co.clientId LEFT JOIN ( SELECT pi.consumOrderId, GROUP_CONCAT( pi.NAME ) AS projectName FROM projectinfo pi GROUP BY pi.consumOrderId ) AS pn ON pn.consumOrderId = co.id WHERE co.createDate > :startTime1 AND co.createDate < :endTime1 AND co.payState = 1 UNION SELECT wpo.id, wpo.clientId, \"\" as carBrand, \"\" as licensePlate, c.`name`, c.phone, wpo.totalPrice AS totalActualPrice, wpo.totalPrice, \"办卡\" as projectName, wpo.createDate, c.isMember FROM wxpayorder wpo LEFT JOIN client c on c.id=wpo.clientId WHERE wpo.createDate > :startTime2 AND wpo.createDate < :endTime2 AND wpo.payState = 1 ) t ORDER BY t.createDate DESC";
@@ -354,5 +364,32 @@ public class ConsumOrderDaoImpl implements ConsumOrderDao {
         return ((Map<String, BigInteger>) query.uniqueResult()).get("num").longValue();
     }
 
-
+    /**
+     * 根据时间查询列表（已结算订单）
+     *
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @Override
+    public List<OrderSummary> listAllPaidOrders(String startTime, String endTime) {
+        String sql = " select * from (SELECT co.id, co.clientId, co.carBrand, co.licensePlate, c.`name`, c.phone, co.actualPrice + co.actualPrice1 AS totalActualPrice, co.totalPrice, pn.projectName, co.createDate, c.isMember FROM consumorder co LEFT JOIN client c ON c.id = co.clientId LEFT JOIN ( SELECT pi.consumOrderId, GROUP_CONCAT( pi.NAME ) AS projectName FROM projectinfo pi GROUP BY pi.consumOrderId ) AS pn ON pn.consumOrderId = co.id WHERE co.createDate > :startTime1 AND co.createDate < :endTime1 AND co.payState = 1 UNION SELECT wpo.id, wpo.clientId, \"\" as carBrand, \"\" as licensePlate, c.`name`, c.phone, wpo.totalPrice AS totalActualPrice, wpo.totalPrice, \"办卡\" as projectName, wpo.createDate, c.isMember FROM wxpayorder wpo LEFT JOIN client c on c.id=wpo.clientId WHERE wpo.createDate > :startTime2 AND wpo.createDate < :endTime2 AND wpo.payState = 1 ) t ORDER BY t.createDate DESC";
+        Query query = this.getSession().createSQLQuery(sql)
+                .addScalar("id", StandardBasicTypes.STRING)
+                .addScalar("clientId", StandardBasicTypes.STRING)
+                .addScalar("carBrand", StandardBasicTypes.STRING)
+                .addScalar("licensePlate", StandardBasicTypes.STRING)
+                .addScalar("name", StandardBasicTypes.STRING)
+                .addScalar("phone", StandardBasicTypes.STRING)
+                .addScalar("totalActualPrice", StandardBasicTypes.STRING)
+                .addScalar("totalPrice", StandardBasicTypes.STRING)
+                .addScalar("projectName", StandardBasicTypes.STRING)
+                .addScalar("createDate", StandardBasicTypes.STRING)
+                .addScalar("isMember", StandardBasicTypes.STRING)
+                .setResultTransformer(Transformers.aliasToBean(OrderSummary.class))
+                .setString("startTime1", startTime).setString("endTime1", endTime)
+                .setString("startTime2", startTime).setString("endTime2", endTime)
+                .setCacheable(Constants.SELECT_CACHE);
+        return query.list();
+    }
 }

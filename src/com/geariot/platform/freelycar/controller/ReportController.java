@@ -76,4 +76,12 @@ public class ReportController {
     public void exportStatExcelWithMonth(int month, HttpServletResponse response, HttpServletRequest request) {
         reportService.exportStatExcelWithMonth(month, response, request);
     }
+
+    @RequestMapping(value = "/orderSummary", method = RequestMethod.GET)
+    @PermissionRequire("client:orderSummary")
+    public void exportOrderSummaryExcelWithDate(String startTime, String endTime, HttpServletResponse response, HttpServletRequest request) {
+        startTime = startTime.replaceAll("/", "-");
+        endTime = endTime.replaceAll("/", "-");
+        reportService.exportOrderSummaryExcelWithDate(startTime, endTime, response, request);
+    }
 }

@@ -24,6 +24,8 @@ public class OrderSummaryController {
 
     @GetMapping(value = "/list")
     public Map<String, Object> list(@RequestParam String startTime, @RequestParam String endTime, @RequestParam int page, @RequestParam int pageSize) {
+        startTime = startTime.replaceAll("/", "-");
+        endTime = endTime.replaceAll("/", "-");
         return orderSummaryService.listAllPaidOrders(startTime, endTime, page, pageSize);
     }
 }
