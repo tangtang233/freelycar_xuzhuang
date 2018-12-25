@@ -307,7 +307,7 @@ public class ClientExcelExport {
             //设置金额
             row.createCell(6).setCellValue(data.getTotalActualPrice());
             //设置时间
-            row.createCell(7).setCellValue((new Date(data.getCreateDate())));
+            row.createCell(7).setCellValue(data.getCreateDate());
             //设置车牌号码
             row.createCell(8).setCellValue("1".equals(data.getIsMember()) ? "是" : "否");
         }

@@ -9,6 +9,7 @@ import com.geariot.platform.freelycar.service.ReportService;
 import com.geariot.platform.freelycar.shiro.PermissionRequire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -80,8 +81,10 @@ public class ReportController {
     @RequestMapping(value = "/orderSummary", method = RequestMethod.GET)
     @PermissionRequire("client:orderSummary")
     public void exportOrderSummaryExcelWithDate(String startTime, String endTime, HttpServletResponse response, HttpServletRequest request) {
-        startTime = startTime.replaceAll("/", "-");
-        endTime = endTime.replaceAll("/", "-");
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            startTime = startTime.replaceAll("/", "-") + " 00:00:00";
+            endTime = endTime.replaceAll("/", "-") + " 23:59:59";
+        }
         reportService.exportOrderSummaryExcelWithDate(startTime, endTime, response, request);
     }
 }

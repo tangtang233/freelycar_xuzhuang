@@ -17,6 +17,7 @@ import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -343,8 +344,21 @@ public class ConsumOrderDaoImpl implements ConsumOrderDao {
      */
     @Override
     public List<OrderSummary> listAllPaidOrders(String startTime, String endTime, int from, int pageSize) {
-        String sql = " select * from (SELECT co.id, co.clientId, co.carBrand, co.licensePlate, c.`name`, c.phone, co.actualPrice + co.actualPrice1 AS totalActualPrice, co.totalPrice, pn.projectName, co.createDate, c.isMember FROM consumorder co LEFT JOIN client c ON c.id = co.clientId LEFT JOIN ( SELECT pi.consumOrderId, GROUP_CONCAT( pi.NAME ) AS projectName FROM projectinfo pi GROUP BY pi.consumOrderId ) AS pn ON pn.consumOrderId = co.id WHERE co.createDate > :startTime1 AND co.createDate < :endTime1 AND co.payState = 1 UNION SELECT wpo.id, wpo.clientId, \"\" as carBrand, \"\" as licensePlate, c.`name`, c.phone, wpo.totalPrice AS totalActualPrice, wpo.totalPrice, \"办卡\" as projectName, wpo.createDate, c.isMember FROM wxpayorder wpo LEFT JOIN client c on c.id=wpo.clientId WHERE wpo.createDate > :startTime2 AND wpo.createDate < :endTime2 AND wpo.payState = 1 ) t ORDER BY t.createDate DESC";
-        Query query = this.getSession().createSQLQuery(sql).setString("startTime1", startTime).setString("endTime1", endTime).setString("startTime2", startTime).setString("endTime2", endTime).setFirstResult(from).setMaxResults(pageSize).setCacheable(Constants.SELECT_CACHE);
+        StringBuffer sql = new StringBuffer();
+        sql.append(" select * from (SELECT co.id, co.clientId, co.carBrand, co.licensePlate, c.`name`, c.phone, co.actualPrice + co.actualPrice1 AS totalActualPrice, co.totalPrice, pn.projectName, co.createDate, c.isMember FROM consumorder co LEFT JOIN client c ON c.id = co.clientId LEFT JOIN ( SELECT pi.consumOrderId, GROUP_CONCAT( pi.NAME ) AS projectName FROM projectinfo pi GROUP BY pi.consumOrderId ) AS pn ON pn.consumOrderId = co.id WHERE co.payState = 1 ");
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            sql.append(" AND co.createDate > :startTime1 AND co.createDate < :endTime1 ");
+        }
+        sql.append(" UNION ").append(" SELECT wpo.id, wpo.clientId, \"\" as carBrand, \"\" as licensePlate, c.`name`, c.phone, wpo.totalPrice AS totalActualPrice, wpo.totalPrice, \"办卡\" as projectName, wpo.createDate, c.isMember FROM wxpayorder wpo LEFT JOIN client c on c.id=wpo.clientId WHERE wpo.payState = 1 ");
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            sql.append(" AND wpo.createDate > :startTime2 AND wpo.createDate < :endTime2 ");
+        }
+        sql.append(" ) t ORDER BY t.createDate DESC");
+        Query query = this.getSession().createSQLQuery(sql.toString());
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            query.setString("startTime1", startTime).setString("endTime1", endTime).setString("startTime2", startTime).setString("endTime2", endTime);
+        }
+        query.setFirstResult(from).setMaxResults(pageSize).setCacheable(Constants.SELECT_CACHE);
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.list();
     }
@@ -358,8 +372,21 @@ public class ConsumOrderDaoImpl implements ConsumOrderDao {
      */
     @Override
     public long getAllPaidOrdersCount(String startTime, String endTime) {
-        String sql = "select count(1) as num from (SELECT co.id, co.clientId, co.carBrand, co.licensePlate, c.`name`, c.phone, co.actualPrice + co.actualPrice1 AS totalActualPrice, co.totalPrice, pn.projectName, co.createDate, c.isMember FROM consumorder co LEFT JOIN client c ON c.id = co.clientId LEFT JOIN ( SELECT pi.consumOrderId, GROUP_CONCAT( pi.NAME ) AS projectName FROM projectinfo pi GROUP BY pi.consumOrderId ) AS pn ON pn.consumOrderId = co.id WHERE co.createDate > :startTime1 AND co.createDate < :endTime1 AND co.payState = 1 UNION SELECT wpo.id, wpo.clientId, \"\" as carBrand, \"\" as licensePlate, c.`name`, c.phone, wpo.totalPrice AS totalActualPrice, wpo.totalPrice, \"办卡\" as projectName, wpo.createDate, c.isMember FROM wxpayorder wpo LEFT JOIN client c on c.id=wpo.clientId WHERE wpo.createDate > :startTime2 AND wpo.createDate < :endTime2 AND wpo.payState = 1 ) t ORDER BY t.createDate DESC";
-        Query query = this.getSession().createSQLQuery(sql).setString("startTime1", startTime).setString("endTime1", endTime).setString("startTime2", startTime).setString("endTime2", endTime).setCacheable(Constants.SELECT_CACHE);
+        StringBuffer sql = new StringBuffer();
+        sql.append(" select count(1) as num from (SELECT co.id, co.clientId, co.carBrand, co.licensePlate, c.`name`, c.phone, co.actualPrice + co.actualPrice1 AS totalActualPrice, co.totalPrice, pn.projectName, co.createDate, c.isMember FROM consumorder co LEFT JOIN client c ON c.id = co.clientId LEFT JOIN ( SELECT pi.consumOrderId, GROUP_CONCAT( pi.NAME ) AS projectName FROM projectinfo pi GROUP BY pi.consumOrderId ) AS pn ON pn.consumOrderId = co.id WHERE co.payState = 1 ");
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            sql.append(" AND co.createDate > :startTime1 AND co.createDate < :endTime1 ");
+        }
+        sql.append(" UNION ").append(" SELECT wpo.id, wpo.clientId, \"\" as carBrand, \"\" as licensePlate, c.`name`, c.phone, wpo.totalPrice AS totalActualPrice, wpo.totalPrice, \"办卡\" as projectName, wpo.createDate, c.isMember FROM wxpayorder wpo LEFT JOIN client c on c.id=wpo.clientId WHERE wpo.payState = 1 ");
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            sql.append(" AND wpo.createDate > :startTime2 AND wpo.createDate < :endTime2 ");
+        }
+        sql.append(" ) t ORDER BY t.createDate DESC");
+        Query query = this.getSession().createSQLQuery(sql.toString());
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            query.setString("startTime1", startTime).setString("endTime1", endTime).setString("startTime2", startTime).setString("endTime2", endTime);
+        }
+        query.setCacheable(Constants.SELECT_CACHE);
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return ((Map<String, BigInteger>) query.uniqueResult()).get("num").longValue();
     }
@@ -373,8 +400,17 @@ public class ConsumOrderDaoImpl implements ConsumOrderDao {
      */
     @Override
     public List<OrderSummary> listAllPaidOrders(String startTime, String endTime) {
-        String sql = " select * from (SELECT co.id, co.clientId, co.carBrand, co.licensePlate, c.`name`, c.phone, co.actualPrice + co.actualPrice1 AS totalActualPrice, co.totalPrice, pn.projectName, co.createDate, c.isMember FROM consumorder co LEFT JOIN client c ON c.id = co.clientId LEFT JOIN ( SELECT pi.consumOrderId, GROUP_CONCAT( pi.NAME ) AS projectName FROM projectinfo pi GROUP BY pi.consumOrderId ) AS pn ON pn.consumOrderId = co.id WHERE co.createDate > :startTime1 AND co.createDate < :endTime1 AND co.payState = 1 UNION SELECT wpo.id, wpo.clientId, \"\" as carBrand, \"\" as licensePlate, c.`name`, c.phone, wpo.totalPrice AS totalActualPrice, wpo.totalPrice, \"办卡\" as projectName, wpo.createDate, c.isMember FROM wxpayorder wpo LEFT JOIN client c on c.id=wpo.clientId WHERE wpo.createDate > :startTime2 AND wpo.createDate < :endTime2 AND wpo.payState = 1 ) t ORDER BY t.createDate DESC";
-        Query query = this.getSession().createSQLQuery(sql)
+        StringBuffer sql = new StringBuffer();
+        sql.append(" select * from (SELECT co.id, co.clientId, co.carBrand, co.licensePlate, c.`name`, c.phone, co.actualPrice + co.actualPrice1 AS totalActualPrice, co.totalPrice, pn.projectName, co.createDate, c.isMember FROM consumorder co LEFT JOIN client c ON c.id = co.clientId LEFT JOIN ( SELECT pi.consumOrderId, GROUP_CONCAT( pi.NAME ) AS projectName FROM projectinfo pi GROUP BY pi.consumOrderId ) AS pn ON pn.consumOrderId = co.id WHERE co.payState = 1 ");
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            sql.append(" AND co.createDate > :startTime1 AND co.createDate < :endTime1 ");
+        }
+        sql.append(" UNION ").append(" SELECT wpo.id, wpo.clientId, \"\" as carBrand, \"\" as licensePlate, c.`name`, c.phone, wpo.totalPrice AS totalActualPrice, wpo.totalPrice, \"办卡\" as projectName, wpo.createDate, c.isMember FROM wxpayorder wpo LEFT JOIN client c on c.id=wpo.clientId WHERE wpo.payState = 1 ");
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            sql.append(" AND wpo.createDate > :startTime2 AND wpo.createDate < :endTime2 ");
+        }
+        sql.append(" ) t ORDER BY t.createDate DESC");
+        Query query = this.getSession().createSQLQuery(sql.toString())
                 .addScalar("id", StandardBasicTypes.STRING)
                 .addScalar("clientId", StandardBasicTypes.STRING)
                 .addScalar("carBrand", StandardBasicTypes.STRING)
@@ -386,10 +422,11 @@ public class ConsumOrderDaoImpl implements ConsumOrderDao {
                 .addScalar("projectName", StandardBasicTypes.STRING)
                 .addScalar("createDate", StandardBasicTypes.STRING)
                 .addScalar("isMember", StandardBasicTypes.STRING)
-                .setResultTransformer(Transformers.aliasToBean(OrderSummary.class))
-                .setString("startTime1", startTime).setString("endTime1", endTime)
-                .setString("startTime2", startTime).setString("endTime2", endTime)
-                .setCacheable(Constants.SELECT_CACHE);
+                .setResultTransformer(Transformers.aliasToBean(OrderSummary.class));
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            query.setString("startTime1", startTime).setString("endTime1", endTime).setString("startTime2", startTime).setString("endTime2", endTime);
+        }
+        query.setCacheable(Constants.SELECT_CACHE);
         return query.list();
     }
 }

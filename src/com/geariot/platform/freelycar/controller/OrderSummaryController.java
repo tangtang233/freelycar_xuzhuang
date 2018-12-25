@@ -2,6 +2,7 @@ package com.geariot.platform.freelycar.controller;
 
 import com.geariot.platform.freelycar.service.OrderSummaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,8 +25,10 @@ public class OrderSummaryController {
 
     @GetMapping(value = "/list")
     public Map<String, Object> list(@RequestParam String startTime, @RequestParam String endTime, @RequestParam int page, @RequestParam int pageSize) {
-        startTime = startTime.replaceAll("/", "-");
-        endTime = endTime.replaceAll("/", "-");
+        if (StringUtils.hasLength(startTime) && StringUtils.hasLength(endTime)) {
+            startTime = startTime.replaceAll("/", "-") + " 00:00:00";
+            endTime = endTime.replaceAll("/", "-") + " 23:59:59";
+        }
         return orderSummaryService.listAllPaidOrders(startTime, endTime, page, pageSize);
     }
 }
