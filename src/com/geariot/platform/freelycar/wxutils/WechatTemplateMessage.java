@@ -21,8 +21,8 @@ public class WechatTemplateMessage {
 	private static final Logger log = LogManager.getLogger(WechatTemplateMessage.class);
 			
 	private static final String PAY_ERROR_DATABASE_FAIL = "服务异常";
-	
-	private static final String ASK_FOR_INSURANCE = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx89ac1808e298928d&redirect_uri=http%3a%2f%2fwww.freelycar.com%2ffreelycar_wechat%2fapi%2fuser%2fmenuRedirect%3fhtmlPage%3dinquiry&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+
+	private static final String ASK_FOR_INSURANCE = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx89ac1808e298928d&redirect_uri=http%3a%2f%2fwww.freelycar.cn%2ffreelycar_wechat%2fapi%2fuser%2fmenuRedirect%3fhtmlPage%3dinquiry&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
 	
 	private static String invokeTemplateMessage(JSONObject params){
 		StringEntity entity = new StringEntity(params.toString(),"utf-8"); //解决中文乱码问题   

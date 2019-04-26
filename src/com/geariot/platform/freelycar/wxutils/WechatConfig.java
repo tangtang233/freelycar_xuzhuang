@@ -1,12 +1,12 @@
 package com.geariot.platform.freelycar.wxutils;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 
@@ -33,7 +33,7 @@ public class WechatConfig {
 	//测试公众号appSecret
 //	public static final String APP_SECRET = "85770a016626a666fa0e36d81f0f7661";
 
-	public static final String APP_DOMAIN = "www.freelycar.com/freelycar_wechat";//url域名
+	public static final String APP_DOMAIN = "www.freelycar.cn/freelycar_wechat";//url域名
 	
 	public static final String KEY = "HKzuTu1FrT5wRR9EXb8MRzloIgMophix"; //签名秘钥，在微信商户平台里面设置z`z`
 
