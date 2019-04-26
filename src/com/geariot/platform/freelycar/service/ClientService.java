@@ -284,6 +284,7 @@ public class ClientService {
 	}
 
 	public String consumHistoryToday(int clientId, int page, int number) {
+		int payMethod = 0;
 		int from = (page - 1) * number;
 		List<ConsumOrder> list = this.consumOrderDao.queryByClientIdToday(clientId, from, number);
 		List<IncomeOrder> incomeList = this.incomeOrderDao.listByClientIdToday(clientId, from, number);
@@ -296,7 +297,11 @@ public class ClientService {
 		if (list != null) {
 			for (ConsumOrder consumOrder : list) {
 				String project = "";
-				int payMethod = Integer.parseInt(consumOrder.getPayMethod());
+				if (consumOrder.getPayMethod().contains("$")) {
+					payMethod = Integer.parseInt(consumOrder.getPayMethod().substring(0, 1));
+				} else {
+					payMethod = Integer.parseInt(consumOrder.getPayMethod());
+				}
 				float consumAmount = 0f;
 				for (ProjectInfo projectInfo : consumOrder.getProjects()) {
 					project = project + projectInfo.getName() + "、";
@@ -361,6 +366,7 @@ public class ClientService {
 	}
 
 	public String consumHistoryMonth(int clientId, int page, int number) {
+		int payMethod = 0;
 		int from = (page - 1) * number;
 		ConsumHist consumHist = null;
 		List<ConsumOrder> list = this.consumOrderDao.queryByClientIdMonth(clientId, from, number);
@@ -373,7 +379,11 @@ public class ClientService {
 		if (list != null) {
 			for (ConsumOrder consumOrder : list) {
 				String project = "";
-				int payMethod = Integer.parseInt(consumOrder.getPayMethod());
+				if (consumOrder.getPayMethod().contains("$")) {
+					payMethod = Integer.parseInt(consumOrder.getPayMethod().substring(0, 1));
+				} else {
+					payMethod = Integer.parseInt(consumOrder.getPayMethod());
+				}
 				float consumAmount = 0f;
 				for (ProjectInfo projectInfo : consumOrder.getProjects()) {
 					project = project + projectInfo.getName() + "、";
@@ -438,6 +448,7 @@ public class ClientService {
 	}
 
 	public String consumHistoryDate(int clientId, int page, int number, Date startTime, Date endTime) {
+		int payMethod = 0;
 		if (startTime == null && endTime == null) {
 			ConsumHist consumHist = null;
 			List<ConsumOrder> list = this.consumOrderDao.queryByClientIdAll(clientId);
@@ -450,7 +461,11 @@ public class ClientService {
 			if (list != null) {
 				for (ConsumOrder consumOrder : list) {
 					String project = "";
-					int payMethod = Integer.parseInt(consumOrder.getPayMethod());
+					if (consumOrder.getPayMethod().contains("$")) {
+						payMethod = Integer.parseInt(consumOrder.getPayMethod().substring(0, 1));
+					} else {
+						payMethod = Integer.parseInt(consumOrder.getPayMethod());
+					}
 					float consumAmount = 0f;
 					for (ProjectInfo projectInfo : consumOrder.getProjects()) {
 						project = project + projectInfo.getName() + "、";
@@ -527,7 +542,11 @@ public class ClientService {
 			if (list != null) {
 				for (ConsumOrder consumOrder : list) {
 					String project = "";
-					int payMethod = Integer.parseInt(consumOrder.getPayMethod());
+					if (consumOrder.getPayMethod().contains("$")) {
+						payMethod = Integer.parseInt(consumOrder.getPayMethod().substring(0, 1));
+					} else {
+						payMethod = Integer.parseInt(consumOrder.getPayMethod());
+					}
 					float consumAmount = 0f;
 					for (ProjectInfo projectInfo : consumOrder.getProjects()) {
 						project = project + projectInfo.getName() + "、";
